@@ -92,10 +92,10 @@ public class ExpanseTracker1_2 {
         Date date = new Date();
         try {
             FileWriter myWriter = new FileWriter(file, true);
-            myWriter.append(date + " " + expanse + "," + note + "\n");
+            myWriter.append(String.valueOf(date)).append(" ").append(String.valueOf(expanse)).append(",").append(note).append("\n");
             myWriter.close();
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         String username = file.toPath().toString().substring(0,file.toPath().toString().indexOf("."));
         if(getLastMonth(file)>=getBudget(username)){
@@ -117,7 +117,7 @@ public class ExpanseTracker1_2 {
             myReader.close();
             System.out.println("Total Expanse: " + totalExpanse);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
     public static void show(File file, Date date) {
@@ -148,7 +148,7 @@ public class ExpanseTracker1_2 {
             }
             myReader.close();
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         System.out.println("Total Expanses till now from given date: " + expanseFromDate);
     }
@@ -210,12 +210,14 @@ public class ExpanseTracker1_2 {
         try {
             myReader = new Scanner(file);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
-        while (myReader.hasNextLine()) {
+        while (true) {
+            assert myReader != null;
+            if (!myReader.hasNextLine()) break;
             String data = myReader.nextLine();
             int index = data.indexOf(",");
-            if (data.substring(index + 1, data.length()).equals(category)) {
+            if (data.substring(index + 1).equals(category)) {
                 System.out.println(data);
                 int expanseIndex = data.indexOf(",", 30);
                 categoryExpanses += Integer.parseInt(data.substring(29, expanseIndex));
@@ -229,11 +231,11 @@ public class ExpanseTracker1_2 {
         File admin = new File("admin.txt");
         try{
             FileWriter writer = new FileWriter(admin,true);
-            writer.append(username+" "+password+" "+budget+" \n");
+            writer.append(username).append(" ").append(password).append(" ").append(String.valueOf(budget)).append(" \n");
             writer.close();
         }
         catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
     public static String getPassword(String username){
@@ -249,7 +251,7 @@ public class ExpanseTracker1_2 {
             }
         }
         catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
         return data.substring(data.indexOf(" ")+1,data.indexOf(" ",data.indexOf(" ")+1));
     }
@@ -275,14 +277,14 @@ public class ExpanseTracker1_2 {
             writer.close();
         }
         catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
         try {
             Files.delete(adminFile.toPath());
             Files.move(tempFile.toPath(), adminFile.toPath());
         }
         catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
     public synchronized static void setBudget(String username,String budget){
@@ -306,14 +308,14 @@ public class ExpanseTracker1_2 {
             writer.close();
         }
         catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
         try {
             Files.delete(adminFile.toPath());
             Files.move(tempFile.toPath(), adminFile.toPath());
         }
         catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
     public static int getBudget(String username){
@@ -325,7 +327,8 @@ public class ExpanseTracker1_2 {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String names = line.substring(0,line.indexOf(" "));
-                String data = line.substring(line.indexOf(" ",line.indexOf(" ")+1)+1 , line.indexOf(" ",line.indexOf(" ",line.indexOf(" ")+1)+1));
+                int Index = line.indexOf(" ", line.indexOf(" ") + 1) + 1;
+                String data = line.substring(Index, line.indexOf(" ", Index));
                 if (names.equals(username)) {
                     budget = Integer.parseInt(data);
                 }
@@ -333,6 +336,7 @@ public class ExpanseTracker1_2 {
             bufferedReader.close();
         }
         catch (Exception e){
+            e.printStackTrace();
         }
         return budget;
     }
@@ -374,19 +378,21 @@ public class ExpanseTracker1_2 {
             default -> System.out.println("Enter a valid input!");
         }
         while(true) {
-            System.out.println("Actions: \n" +
-                    "1. Add an Expanse\n" +
-                    "2. Show Expanses till now\n" +
-                    "3. Last Month Expanse\n" +
-                    "4. Last Year Expanse\n" +
-                    "5. Expanses after a specific date(specify the date)\n" +
-                    "6. Set Budget\n" +
-                    "7. login as different User\n" +
-                    "8. Signup as new User\n" +
-                    "9. Change password\n" +
-                    "10. Categorised expanses(specify the category)\n" +
-                    "11. Clear History\n" +
-                    "12. Exit\n");
+            System.out.println("""
+                    Actions:\s
+                    1. Add an Expanse
+                    2. Show Expanses till now
+                    3. Last Month Expanse
+                    4. Last Year Expanse
+                    5. Expanses after a specific date(specify the date)
+                    6. Set Budget
+                    7. login as different User
+                    8. Signup as new User
+                    9. Change password
+                    10. Categorised expanses(specify the category)
+                    11. Clear History
+                    12. Exit
+                    """);
             int input = sc.nextInt();
             switch (input){
                 case 1-> add(userFile);
@@ -403,7 +409,7 @@ public class ExpanseTracker1_2 {
                         System.out.println("Expanse from " + specificDate);
                         show(userFile, specificDate);
                     } catch (Exception e) {
-                        System.out.println(e);
+                        e.printStackTrace();
                     }
                 }
                 case 6->{
@@ -443,11 +449,12 @@ public class ExpanseTracker1_2 {
                     String response = sc.next();
                     if (response.equals("y") || response.equals("Y")) {
                         try {
+                            assert userFile != null;
                             FileWriter fileWriter = new FileWriter(userFile);
                             fileWriter.write("");
                             fileWriter.close();
                         } catch (Exception e) {
-                            System.out.println(e);
+                            e.printStackTrace();
                         }
                     }
                 }
