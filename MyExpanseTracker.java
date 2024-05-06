@@ -1,11 +1,11 @@
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+    import javax.mail.*;
+    import javax.mail.internet.InternetAddress;
+    import javax.mail.internet.MimeMessage;
 import java.nio.file.Files;
 import java.util.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
-public class ExpanseTracker1_2 {
+public class MyExpanseTracker {
     public static String otp(){
         int[][] randomRanges = {{48,57},{65,90},{97,122}};
         Random random = new Random();
@@ -20,7 +20,6 @@ public class ExpanseTracker1_2 {
         String host = "smtp.gmail.com";
         Properties properties = System.getProperties();
         System.out.println("PROPERTIES: "+properties);
-
         properties.put("mail.smtp.host",host);
         properties.put("mail.smtp.port","465");
         properties.put("mail.smtp.ssl.enable","true");
@@ -86,9 +85,24 @@ public class ExpanseTracker1_2 {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Expense Amount: ");
         int expanse = scanner.nextInt();
-        System.out.println("Category: (food, travel, education, investment, others)");
+        System.out.println("Category: \n" +
+                "1. food\n" +
+                "2. travel\n" +
+                "3. education\n" +
+                "4. investment\n" +
+                "5. others)");
         Scanner sc = new Scanner(System.in);
-        String note = sc.nextLine();
+        int option = sc.nextInt();
+        String note;
+        switch(option){
+            case 1-> note = "food";
+            case 2-> note = "travel";
+            case 3-> note = "education";
+            case 4-> note = "investment";
+            case 5-> note = "others";
+            default -> note = "";
+        }
+
         Date date = new Date();
         try {
             FileWriter myWriter = new FileWriter(file, true);
@@ -441,7 +455,22 @@ public class ExpanseTracker1_2 {
                     updatePassword(currentUser,newPassword);
                 }
                 case 10->{
-                    String category = sc.next();
+                    System.out.println("Category: \n" +
+                            "1. food\n" +
+                            "2. travel\n" +
+                            "3. education\n" +
+                            "4. investment\n" +
+                            "5. others)");
+                    String category;
+                    int option = sc.nextInt();
+                    switch(option){
+                        case 1-> category = "food";
+                        case 2-> category = "travel";
+                        case 3-> category = "education";
+                        case 4-> category = "investment";
+                        case 5-> category = "others";
+                        default -> category = "";
+                    }
                     showCategory(userFile, category);
                 }
                 case 11->{

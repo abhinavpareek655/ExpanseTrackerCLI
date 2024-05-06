@@ -2,7 +2,6 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Expanse-Tracker-" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Expense-Tracker" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/demo" vcs="Git" />
   </component>
 </project>
